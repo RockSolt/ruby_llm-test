@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
+
+plugins:
+  - rubocop-minitest
+
+AllCops:
+  TargetRubyVersion: 3.3
+  Exclude:
+    - "ruby_llm-test.gemspec"
+    - "Rakefile"
+  NewCops: enable
+  SuggestExtensions: false
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: space
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
