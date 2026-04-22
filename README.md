@@ -43,12 +43,40 @@ If you make multiple calls to the LLM, you can call `stub_response` more than on
 
 ```ruby
 it 'returns multiple stubbed responses' do
-  RubyLLM::Test.stub_responses(['Hello, world!', 'How are you?'])
+  RubyLLM::Test.stub_responses('Hello, world!', 'How are you?')
   response1 = MyLLMClient.call('Hello?')
   response2 = MyLLMClient.call('How are you?')
 
   expect(response1).to eq('Hello, world!')
   expect(response2).to eq('How are you?')
+end
+```
+
+### Stubbing with a Message
+
+If you stub with a string, it will be wrapped in a `RubyLLM::Message` with the role of `:assistant`. If you want more control over the message, you can stub with a `RubyLLM::Message` directly. For example:
+
+```ruby
+it 'returns a stubbed message' do
+  message = RubyLLM::Message.new(role: :assistant, content: 'Hello, world!')
+  RubyLLM::Test.stub_response(message)
+
+  response = MyLLMClient.call('Hello?')
+  expect(response).to eq(message)
+end
+```
+
+### Stubbing with a Hash Returns JSON
+
+If you stub with a hash, it will be converted to a `RubyLLM::Message` with the content set to the JSON representation of the hash. For example:
+
+```ruby
+it 'returns a stubbed JSON message' do
+  hash = { key: 'value' }
+  RubyLLM::Test.stub_response(hash)
+
+  response = MyLLMClient.call('Hello?')
+  expect(response.content).to eq(hash.to_json)
 end
 ```
 
@@ -66,7 +94,7 @@ You can also stub responses in a block, which handles the setup and teardown of 
 
 ```ruby
 
-RubyLLM::Test.stub_response('Hello, world!') do
+RubyLLM::Test.with_responses('Hello, world!') do
   response = MyLLMClient.call('Hello?')
   expect(response).to eq('Hello, world!')
 end
