@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "test/errors/no_response_provided_error"
-require_relative "test/test_provider"
-require_relative "test/complete_parameters"
+require "ruby_llm"
+require "zeitwerk"
+
+loader = Zeitwerk::Loader.for_gem_extension(RubyLLM)
+loader.setup
 
 module RubyLLM
   # The Test module provides a simple way to stub responses from an LLM for testing purposes. You can use it to set up
