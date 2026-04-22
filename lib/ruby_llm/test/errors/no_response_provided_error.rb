@@ -13,8 +13,7 @@ module RubyLLM
 
         def initialize(messages)
           @messages = messages
-
-          super("No test response provided for the following request:\n#{messages.last.content}")
+          super("No test response provided for the following request:\n#{messages.last&.content}")
         end
       end
     end

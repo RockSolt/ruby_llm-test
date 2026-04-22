@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "ruby_llm/test"
+require "simplecov"
 
+SimpleCov.start do
+  add_filter %r{^/test/}
+  enable_coverage :branch
+end
+
+require "ruby_llm/test"
 require "minitest/autorun"
