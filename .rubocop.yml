@@ -8,6 +8,7 @@ AllCops:
   Exclude:
     - "ruby_llm-test.gemspec"
     - "Rakefile"
+    - "vendor/**/*"
   NewCops: enable
   SuggestExtensions: false
 
