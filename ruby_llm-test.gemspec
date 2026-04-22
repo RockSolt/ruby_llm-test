@@ -20,10 +20,4 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*", "LICENSE.txt", "README.md"]
 
   spec.add_dependency "ruby_llm", ">= 1.14.0"
-
-  spec.add_development_dependency "minitest", "~> 6.0"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rubocop", "~> 1.86"
-  spec.add_development_dependency "rubocop-minitest", "~> 0.39"
-  spec.add_development_dependency "simplecov", "~> 0.22"
 end
