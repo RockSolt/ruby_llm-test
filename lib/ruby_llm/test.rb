@@ -5,6 +5,9 @@ require_relative "test/test_provider"
 require_relative "test/complete_parameters"
 
 module RubyLLM
+  # The Test module provides a simple way to stub responses from an LLM for testing purposes. You can use it to set up
+  #  predetermined responses that your tests can rely on, allowing you to test your code's behavior without making
+  #  actual calls to an LLM.
   module Test
     class << self
       def reset

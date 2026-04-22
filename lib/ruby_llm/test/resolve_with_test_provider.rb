@@ -10,12 +10,8 @@ module RubyLLM
     #
     # RubyLLM::Models.singleton_class.prepend(RubyLLM::Test::ResolveWithTestProvider)
     module ResolveWithTestProvider
-      def self.prepended(base)
-        super
-      end
-
       def resolve(...)
-        model, provider_instance = super(...)
+        model, provider_instance = super
         [ model, Test::TestProvider.new(provider_instance, RubyLLM::Test) ]
       end
     end
