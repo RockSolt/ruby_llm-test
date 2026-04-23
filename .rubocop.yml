@@ -6,6 +6,7 @@ plugins:
 AllCops:
   TargetRubyVersion: 3.3
   Exclude:
+    - "gemfiles/**/*"
     - "ruby_llm-test.gemspec"
     - "Rakefile"
     - "vendor/**/*"
@@ -14,6 +15,13 @@ AllCops:
 
 Layout/SpaceInsideArrayLiteralBrackets:
   EnforcedStyle: space
+
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+Metrics/MethodLength:
+  Exclude:
+    - "test/**/*"
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

@@ -10,8 +10,7 @@ module RubyLLM
 
       attr_reader :complete_calls
 
-      def_delegators :last_call, :messages, :tools, :temperature, :model, :params, :headers, :schema, :thinking,
-                     :tool_prefs, :block_received?
+      def_delegators :last_call, :messages, :block_received?
 
       def initialize(provider, test_harness = RubyLLM::Test)
         super(provider)
@@ -19,11 +18,10 @@ module RubyLLM
         @complete_calls = []
       end
 
-      def complete(messages, tools:, temperature:, model:, params: {}, # rubocop:disable Metrics/ParameterLists
-                   headers: {}, schema: nil, thinking: nil, tool_prefs: nil, &block)
-        @complete_calls << CompleteParameters.new(messages:, tools:, temperature:, model:, params:, headers:, schema:,
-                                                  thinking:, tool_prefs:, block:)
-        raise Errors::NoResponseProvidedError, messages if @test_harness.responses_empty?
+      def complete(...)
+        call = CompleteParameters.capture_from(__getobj__, ...)
+        @complete_calls << call
+        raise Errors::NoResponseProvidedError, call.messages if @test_harness.responses_empty?
 
         response = @test_harness.next_response
         return response if response.is_a?(Message)
