@@ -6,6 +6,7 @@ plugins:
 AllCops:
   TargetRubyVersion: 3.3
   Exclude:
+    - "gemfiles/**/*"
     - "ruby_llm-test.gemspec"
     - "Rakefile"
     - "vendor/**/*"

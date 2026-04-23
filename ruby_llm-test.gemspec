@@ -19,5 +19,5 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir["lib/**/*", "LICENSE.txt", "README.md"]
 
-  spec.add_dependency "ruby_llm", ">= 1.14.0"
+  spec.add_dependency "ruby_llm", ">= 1.5.0"
 end
