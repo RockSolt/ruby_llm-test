@@ -16,6 +16,13 @@ AllCops:
 Layout/SpaceInsideArrayLiteralBrackets:
   EnforcedStyle: space
 
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+Metrics/MethodLength:
+  Exclude:
+    - "test/**/*"
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 Style/StringLiteralsInInterpolation:

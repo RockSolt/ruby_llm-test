@@ -5,6 +5,12 @@ require "test_helper"
 module RubyLLM
   module Test
     class TestProviderTest < Minitest::Test
+      class ProviderDouble
+        def complete(messages, tools:, temperature:, model:, params: {}, # rubocop:disable Metrics/ParameterLists
+                     headers: {}, schema: nil, thinking: nil, tool_prefs: nil, &)
+        end
+      end
+
       def setup
         RubyLLM::Test.reset
       end
@@ -12,7 +18,7 @@ module RubyLLM
       def test_provider_returns_stubbed_response
         RubyLLM::Test.stub_response("stubbed response")
 
-        provider = TestProvider.new(nil, RubyLLM::Test)
+        provider = TestProvider.new(ProviderDouble.new, RubyLLM::Test)
         response = provider.complete([], tools: [], temperature: 0.5, model: "test-model", params: {}, headers: {})
 
         assert_kind_of Message, response
@@ -20,7 +26,7 @@ module RubyLLM
       end
 
       def test_when_response_not_stubbed
-        provider = TestProvider.new(nil, RubyLLM::Test)
+        provider = TestProvider.new(ProviderDouble.new, RubyLLM::Test)
         message = Message.new(role: :user, content: "What is the capital of France?")
 
         exception = assert_raises(Errors::NoResponseProvidedError) do
@@ -34,7 +40,7 @@ module RubyLLM
         stubbed_message = Message.new(role: :assistant, content: "This is a stubbed message.")
         RubyLLM::Test.stub_response(stubbed_message)
 
-        provider = TestProvider.new(nil, RubyLLM::Test)
+        provider = TestProvider.new(ProviderDouble.new, RubyLLM::Test)
         response = provider.complete([], tools: [], temperature: 0.5, model: "test-model", params: {}, headers: {})
 
         assert_equal stubbed_message, response
@@ -44,7 +50,7 @@ module RubyLLM
         stubbed_hash = { answer: "42" }
         RubyLLM::Test.stub_response(stubbed_hash)
 
-        provider = TestProvider.new(nil, RubyLLM::Test)
+        provider = TestProvider.new(ProviderDouble.new, RubyLLM::Test)
         response = provider.complete([], tools: [], temperature: 0.5, model: "test-model", params: {}, headers: {})
 
         assert_kind_of Message, response
@@ -53,12 +59,18 @@ module RubyLLM
     end
 
     class TestProviderLastCallTest < Minitest::Test
+      class ProviderDouble
+        def complete(messages, tools:, temperature:, model:, params: {}, # rubocop:disable Metrics/ParameterLists
+                     headers: {}, schema: nil, thinking: nil, tool_prefs: nil, &)
+        end
+      end
+
       def setup
         RubyLLM::Test.reset
         RubyLLM::Test.stub_response("stubbed response")
 
         initialize_arguments
-        provider = TestProvider.new(nil, RubyLLM::Test)
+        provider = TestProvider.new(ProviderDouble.new, RubyLLM::Test)
         provider.complete(@messages, tools: @tools, temperature: @temperature, model: @model, params: @params,
                                      headers: @headers, schema: @schema, thinking: @thinking, tool_prefs: @tool_prefs)
 
