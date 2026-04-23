@@ -2,6 +2,15 @@
 
 This gem provides testing utilities for RubyLLM, a Ruby library for working with large language models (LLMs). It enables calls to LLM's to be stubbed so that the surrounding application logic can be tested without making actual calls to the LLM. This is particularly useful for testing code that interacts with LLMs, as it allows developers to simulate responses from the LLM without incurring the cost, latency, or randomness of real API calls.
 
+```ruby
+RubyLLM::Test.stub_response("Outlook good")
+
+chat = RubyLLM.chat
+response = chat.ask "What are the odds this works?"
+
+assert_equal "Outlook good", response.content
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
