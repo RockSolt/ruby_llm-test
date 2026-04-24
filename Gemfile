@@ -10,6 +10,7 @@ gemspec
 group :development, :test do
   gem "appraisal", "~> 2.5"
   gem "minitest", "~> 6.0"
+  gem "minitest-mock", "~> 5.27"
   gem "rake", "~> 13.0"
   gem "rubocop", "~> 1.86"
   gem "rubocop-minitest", "~> 0.39"
