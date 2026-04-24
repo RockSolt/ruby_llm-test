@@ -1,45 +1,86 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "minitest/mock"
 
 module RubyLLM
   class TestTest < Minitest::Test
-    def test_stub_response
+    def setup
+      @original_harness = RubyLLM::Test.instance_variable_get(:@harness)
+      @mock_harness = Minitest::Mock.new
+      RubyLLM::Test.instance_variable_set(:@harness, @mock_harness)
+    end
+
+    def teardown
+      RubyLLM::Test.instance_variable_set(:@harness, @original_harness)
+    end
+
+    def test_reset_forwards_to_harness
+      @mock_harness.expect(:reset, nil)
+
       RubyLLM::Test.reset
+
+      @mock_harness.verify
+    end
+
+    def test_stub_response_forwards_to_harness
+      @mock_harness.expect(:stub_response, nil, [ "test response" ])
+
       RubyLLM::Test.stub_response("test response")
 
-      assert_equal "test response", RubyLLM::Test.next_response
+      @mock_harness.verify
     end
 
-    def test_stub_responses
-      RubyLLM::Test.reset
+    def test_stub_responses_forwards_to_harness
+      @mock_harness.expect(:stub_responses, nil, [ "response 1", "response 2" ])
+
       RubyLLM::Test.stub_responses("response 1", "response 2")
 
-      assert_equal "response 1", RubyLLM::Test.next_response
-      assert_equal "response 2", RubyLLM::Test.next_response
+      @mock_harness.verify
     end
 
-    def test_with_responses
-      RubyLLM::Test.reset
-      RubyLLM::Test.stub_response("initial response")
+    def test_with_responses_forwards_arguments_and_block_to_harness
+      block_called = false
 
-      RubyLLM::Test.with_responses("temp response 1", "temp response 2") do
-        assert_equal "temp response 1", RubyLLM::Test.next_response
-        assert_equal "temp response 2", RubyLLM::Test.next_response
+      @mock_harness.expect(:with_responses, nil) do |*bodies, &block|
+        assert_equal [ "temp response 1", "temp response 2" ], bodies
+        refute_nil block
+
+        block.call
       end
 
-      # Ensure original responses are restored after the block
-      assert_equal "initial response", RubyLLM::Test.next_response
+      RubyLLM::Test.with_responses("temp response 1", "temp response 2") do
+        block_called = true
+      end
+
+      assert block_called
+      @mock_harness.verify
     end
 
-    def test_responses_empty
-      RubyLLM::Test.reset
+    def test_requests_returns_value_from_harness
+      requests = [ Object.new ]
+      @mock_harness.expect(:requests, requests)
 
-      assert_predicate RubyLLM::Test, :responses_empty?
+      assert_equal requests, RubyLLM::Test.requests
 
-      RubyLLM::Test.stub_response("not empty anymore")
+      @mock_harness.verify
+    end
 
-      refute_predicate RubyLLM::Test, :responses_empty?
+    def test_last_request_returns_value_from_harness
+      request = Object.new
+      @mock_harness.expect(:last_request, request)
+
+      assert_equal request, RubyLLM::Test.last_request
+
+      @mock_harness.verify
+    end
+
+    def test_clear_requests_forwards_to_harness
+      @mock_harness.expect(:clear_requests, nil)
+
+      RubyLLM::Test.clear_requests
+
+      @mock_harness.verify
     end
   end
 end

@@ -21,4 +21,16 @@ class ChatTest < Minitest::Test
       assert_equal "stubbed response", response.content
     end
   end
+
+  def test_exposes_last_request
+    RubyLLM::Test.reset
+    RubyLLM::Test.stub_response("42")
+
+    chat = RubyLLM::Chat.new(model: "gpt-4")
+    chat.ask("What is the meaning of life?")
+
+    request = RubyLLM::Test.last_request
+
+    assert_equal "gpt-4", request.model.id
+  end
 end

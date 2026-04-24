@@ -12,7 +12,7 @@ module RubyLLM
     module ResolveWithTestProvider
       def resolve(...)
         model, provider_instance = super
-        [ model, Test::TestProvider.new(provider_instance, RubyLLM::Test) ]
+        [ model, Test::TestProvider.new(provider_instance, RubyLLM::Test.send(:harness)) ]
       end
     end
   end
