@@ -31,6 +31,9 @@ class ChatTest < Minitest::Test
 
     request = RubyLLM::Test.last_request
 
-    assert_equal "gpt-4", request.model.id
+    # this changes across RubyLLM releases
+    model = request.model.is_a?(String) ? request.model : request.model.id
+
+    assert_equal "gpt-4", model
   end
 end
