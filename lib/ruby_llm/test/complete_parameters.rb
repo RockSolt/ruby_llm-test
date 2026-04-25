@@ -51,6 +51,10 @@ module RubyLLM
         key?(name) || super
       end
 
+      def tool_classes
+        (kwargs[:tools] || {}).values.map(&:class)
+      end
+
       private
 
       def positional_name_to_value

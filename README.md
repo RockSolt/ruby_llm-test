@@ -1,6 +1,6 @@
 # RubyLLM::Test
 
-This gem provides testing utilities for RubyLLM, a Ruby library for working with large language models (LLMs). It enables calls to LLM's to be stubbed so that the surrounding application logic can be tested without making actual calls to the LLM. This is particularly useful for testing code that interacts with LLMs, as it allows developers to simulate responses from the LLM without incurring the cost, latency, or randomness of real API calls.
+This gem provides testing utilities for RubyLLM, a Ruby library for working with large language models (LLMs). It enables calls to LLMs to be stubbed so that the surrounding application logic can be tested without making actual calls to the LLM. This is particularly useful for testing code that interacts with LLMs, as it allows developers to simulate responses from the LLM without incurring the cost, latency, or randomness of real API calls.
 
 ```ruby
 RubyLLM::Test.stub_response("Outlook good")
@@ -13,7 +13,7 @@ assert_equal "Outlook good", response.content
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's Gemfile in the test group:
 
 ```ruby
 gem 'ruby_llm-test'
@@ -108,6 +108,23 @@ RubyLLM::Test.with_responses('Hello, world!') do
   expect(response).to eq('Hello, world!')
 end
 ```
+
+### Testing Arguments
+
+You can verify arguments passed to the LLM by checking the requests received by the test provider with methods `requests` and `last_request`.
+
+```ruby
+RubyLLM::Test.stub_response('Hello, world!')
+chat = RubyLLM.chat(model: 'gpt-5-nano')
+chat.with_tools(GreeterTool)
+chat.ask('Hello?')
+request = RubyLLM::Test.last_request
+
+assert_equal 'gpt-5-nano', request.model
+assert_includes request.tool_classes, GreeterTool
+```
+
+Any parameters passed to the Provider's `complete` method are available on the request object. The `tool_classes` method is a helper that returns the classes of any tools included in the request.
 
 ## Development
 
