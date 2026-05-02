@@ -1,6 +1,14 @@
+[![Gem Version](https://badge.fury.io/rb/ruby_llm-test.svg)](https://badge.fury.io/rb/ruby_llm-test)
+[![Tests](https://github.com/RockSolt/ruby_llm-test/actions/workflows/test.yml/badge.svg)](https://github.com/RockSolt/ruby_llm-test/actions/workflows/test.yml)
+[![RuboCop](https://github.com/RockSolt/ruby_llm-test/actions/workflows/rubocop.yml/badge.svg)](https://github.com/RockSolt/ruby_llm-test/actions/workflows/rubocop.yml)
+
 # RubyLLM::Test
 
-This gem provides testing utilities for RubyLLM, a Ruby library for working with large language models (LLMs). It enables calls to LLMs to be stubbed so that the surrounding application logic can be tested without making actual calls to the LLM. This is particularly useful for testing code that interacts with LLMs, as it allows developers to simulate responses from the LLM without incurring the cost, latency, or randomness of real API calls.
+How do you test your business logic when it interacts with large language models (LLMs)? From a testing point of view, an LLM is just an external system. To keep tests fast and consistent, pick a boundary then stub or mock the external system.
+
+Part of the appeal of the RubyLLM library is that code using it does not need to know the specifics of provider APIs. The RubyLLM::Test gem brings the same benefit to your tests. No API or provider-specific knowledge is required to stub calls.
+
+Simple stubs make for simple tests. Keep your tests fast, consistent, and thorough with RubyLLM::Test!
 
 ```ruby
 RubyLLM::Test.stub_response("Outlook good")
@@ -29,7 +37,7 @@ Or install it yourself as:
 
 ## Usage
 
-Add the following lines to your `spec/spec_helper.rb` or `test/test_helper.rb`:
+Add the following lines to your `spec_helper.rb` or `test_helper.rb`:
 
 ```ruby
 require 'ruby_llm/test'
@@ -43,21 +51,22 @@ Then, in your tests, you can use the `stub_response` method to stub responses fr
 it 'returns a stubbed response' do
   RubyLLM::Test.stub_response('Hello, world!')
 
-  response = MyLLMClient.call('Hello?')
-  expect(response).to eq('Hello, world!')
+  response = RubyLLM.chat.ask 'Hello?'
+  expect(response.content).to eq('Hello, world!')
 end
 ```
 
-If you make multiple calls to the LLM, you can call `stub_response` more than once or use method `stub_responses` to stub multiple responses at once. For example:
+If you make multiple calls to the LLM, you can call `stub_response` more than once or use the `stub_responses` method to stub multiple responses at once. For example:
 
 ```ruby
 it 'returns multiple stubbed responses' do
-  RubyLLM::Test.stub_responses('Hello, world!', 'How are you?')
-  response1 = MyLLMClient.call('Hello?')
-  response2 = MyLLMClient.call('How are you?')
+  RubyLLM::Test.stub_responses('Blue.', 'No, yellow.')
+  chat = RubyLLM.chat
+  response1 = chat.ask 'What is your favorite color?'
+  response2 = chat.ask 'Are you sure?'
 
-  expect(response1).to eq('Hello, world!')
-  expect(response2).to eq('How are you?')
+  expect(response1.content).to eq('Blue.')
+  expect(response2.content).to eq('No, yellow.')
 end
 ```
 
@@ -70,7 +79,7 @@ it 'returns a stubbed message' do
   message = RubyLLM::Message.new(role: :assistant, content: 'Hello, world!')
   RubyLLM::Test.stub_response(message)
 
-  response = MyLLMClient.call('Hello?')
+  response = RubyLLM.chat.ask 'Hello?'
   expect(response).to eq(message)
 end
 ```
@@ -84,14 +93,14 @@ it 'returns a stubbed JSON message' do
   hash = { key: 'value' }
   RubyLLM::Test.stub_response(hash)
 
-  response = MyLLMClient.call('Hello?')
+  response = RubyLLM.chat.ask 'Hello?'
   expect(response.content).to eq(hash.to_json)
 end
 ```
 
 ### Resetting Stubs
 
-Make sure to reset stubs after each test to avoid interference before or between tests.
+Reset stubs before each test to ensure a clean slate.
 
 ```ruby
 RubyLLM::Test.reset
@@ -102,10 +111,9 @@ RubyLLM::Test.reset
 You can also stub responses in a block, which handles the setup and teardown of stubs automatically. For example:
 
 ```ruby
-
 RubyLLM::Test.with_responses('Hello, world!') do
-  response = MyLLMClient.call('Hello?')
-  expect(response).to eq('Hello, world!')
+  response = RubyLLM.chat.ask 'Hello?'
+  expect(response.content).to eq('Hello, world!')
 end
 ```
 
