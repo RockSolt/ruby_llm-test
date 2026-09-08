@@ -15,5 +15,5 @@ group :development, :test do
   gem "rubocop", "~> 1.86"
   gem "rubocop-minitest", "~> 0.39"
   gem "ruby-lsp", "~> 0.26"
-  gem "simplecov", "~> 0.22"
+  gem "simplecov", "~> 1.2"
 end
