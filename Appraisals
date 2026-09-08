@@ -23,3 +23,7 @@ end
 appraise "ruby_llm-current" do
   gem "ruby_llm"
 end
+
+appraise "ruby_llm-main" do
+  gem "ruby_llm", github: "crmne/ruby_llm", branch: "main"
+end

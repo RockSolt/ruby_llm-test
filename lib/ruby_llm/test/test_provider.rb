@@ -11,6 +11,12 @@ module RubyLLM
         @test_harness = test_harness
       end
 
+      # There are a number of cases that access `provider.class.display_name`, which avoids the delegation. Adding
+      # dummy stub for this. TBD if this needs to be more sophisticated in the future.
+      def self.display_name
+        "TestProvider"
+      end
+
       def complete(...)
         parameters = CompleteParameters.capture_from(__getobj__, ...)
         @test_harness.record_request(parameters)
