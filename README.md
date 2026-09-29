@@ -1,4 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/ruby_llm-test.svg)](https://badge.fury.io/rb/ruby_llm-test)
+![Gem Total Downloads](https://img.shields.io/gem/dt/ruby_llm-test)
 [![Tests](https://github.com/RockSolt/ruby_llm-test/actions/workflows/test.yml/badge.svg)](https://github.com/RockSolt/ruby_llm-test/actions/workflows/test.yml)
 [![RuboCop](https://github.com/RockSolt/ruby_llm-test/actions/workflows/rubocop.yml/badge.svg)](https://github.com/RockSolt/ruby_llm-test/actions/workflows/rubocop.yml)
 
